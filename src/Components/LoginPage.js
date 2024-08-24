@@ -10,7 +10,7 @@ const LoginPage = () => {
   
 const [errorMessage,setErrorMessage] = useState(null);
 
-    const userName = useRef(null)
+
     const Email = useRef(null)
     const Password = useRef(null)
    
@@ -20,7 +20,7 @@ const [errorMessage,setErrorMessage] = useState(null);
 console.log("Email",Email.current.value)
 console.log("Password",Password.current.value)
 // console.log("UserName", userName.current.value)
-   const Message =  checkValidData(Email.current.value,Password.current.value , userName.current.value) 
+   const Message =  checkValidData(Email.current.value,Password.current.value ) 
   setErrorMessage(Message)
   
   }
@@ -46,7 +46,7 @@ console.log("Password",Password.current.value)
         </h1>
         {!signIn && (
           <input
-          ref={userName}
+        
             type="text"
             placeholder="Enter Your Name"
             className="p-2 m-2 w-full text-white bg-slate-600 bg-opacity-30"
