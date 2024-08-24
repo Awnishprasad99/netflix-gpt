@@ -19,7 +19,7 @@ const [errorMessage,setErrorMessage] = useState(null);
 
 console.log("Email",Email.current.value)
 console.log("Password",Password.current.value)
-console.log("UserName", userName.current.value)
+// console.log("UserName", userName.current.value)
    const Message =  checkValidData(Email.current.value,Password.current.value , userName.current.value) 
   setErrorMessage(Message)
   
