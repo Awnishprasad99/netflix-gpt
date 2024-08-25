@@ -11,7 +11,9 @@ const LoginPage = () => {
   const [signIn, setSignIn] = useState(true);
   const [seePassword, setSeePassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [loginSuccess, setLoginSuccess] = useState(false); // State to track login success
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(null); // State for countdown
+
   const navigate = useNavigate();
 
   // useEffect to navigate to the Browse page after 1 second when login is successful
@@ -24,6 +26,22 @@ const LoginPage = () => {
       return () => clearTimeout(timer); // Cleanup the timer
     }
   }, [loginSuccess, navigate]);
+
+  // useEffect for countdown logic and updating the error message
+  useEffect(() => {
+    if (countdown === 0) {
+      setSignIn(false); // Toggle to sign-up form
+      setErrorMessage("Start creating your account!");
+      setCountdown(null); // Reset countdown
+    } else if (countdown > 0) {
+      setErrorMessage(`Seems like you are new! Please wait for ${countdown} seconds...`);
+      const timer = setTimeout(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [countdown]);
 
   const Email = useRef(null);
   const Password = useRef(null);
@@ -38,7 +56,7 @@ const LoginPage = () => {
       createUserWithEmailAndPassword(auth, Email.current.value, Password.current.value)
         .then((userCredential) => {
           setErrorMessage("Verification Successful!...");
-          setLoginSuccess(true); // Set login success to true to trigger useEffect
+          setLoginSuccess(true);
         })
         .catch((error) => {
           setErrorMessage("User already exists");
@@ -46,16 +64,11 @@ const LoginPage = () => {
     } else {
       signInWithEmailAndPassword(auth, Email.current.value, Password.current.value)
         .then((userCredential) => {
-        
           setErrorMessage("Verification Successful!...");
-          setLoginSuccess(true); // Set login success to true to trigger useEffect
+          setLoginSuccess(true);
         })
         .catch((error) => {
-          setErrorMessage("Seems like you are new, wait for a while...");
-          setTimeout(() => {
-            setSignIn(false);
-            setErrorMessage("Start creating your account!");
-          }, 3000);
+          setCountdown(3); // Start the countdown
         });
     }
   };
