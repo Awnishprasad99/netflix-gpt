@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [seePassword, setSeePassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [countdown, setCountdown] = useState(null); // State for countdown
+ 
 
   const navigate = useNavigate();
 
@@ -27,21 +27,6 @@ const LoginPage = () => {
     }
   }, [loginSuccess, navigate]);
 
-  // useEffect for countdown logic and updating the error message
-  useEffect(() => {
-    if (countdown === 0) {
-      setSignIn(false); // Toggle to sign-up form
-      setErrorMessage("Start creating your account!");
-      setCountdown(null); // Reset countdown
-    } else if (countdown > 0) {
-      setErrorMessage(`Seems like you are new! Please wait for ${countdown} seconds...`);
-      const timer = setTimeout(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000);
-
-      return () => clearTimeout(timer); // Cleanup the timer
-    }
-  }, [countdown]);
 
   const Email = useRef(null);
   const Password = useRef(null);
@@ -52,26 +37,41 @@ const LoginPage = () => {
 
     if (Message) return;
 
-    if (!signIn) {
-      createUserWithEmailAndPassword(auth, Email.current.value, Password.current.value)
-        .then((userCredential) => {
-          setErrorMessage("Verification Successful!...");
-          setLoginSuccess(true);
-        })
-        .catch((error) => {
-          setErrorMessage("User already exists");
-        });
-    } else {
-      signInWithEmailAndPassword(auth, Email.current.value, Password.current.value)
-        .then((userCredential) => {
-          setErrorMessage("Verification Successful!...");
-          setLoginSuccess(true);
-        })
-        .catch((error) => {
-          setCountdown(3); // Start the countdown
-        });
-    }
-  };
+    
+  if (Message) return;
+
+  if (!signIn) {
+    createUserWithEmailAndPassword(auth, Email.current.value, Password.current.value)
+      .then((userCredential) => {
+        setErrorMessage("Sign up Successful!...😊");
+        setLoginSuccess(true);
+      })
+      .catch((error) => {
+        console.error("Sign up error:", error.code); // Log the error code
+        if (error.code === 'auth/email-already-in-use') {
+          setErrorMessage("User already exists...😂😂");
+        } else {
+          setErrorMessage("Sign up failed. Please try again 😒");
+        }
+      });
+  } else {
+    signInWithEmailAndPassword(auth, Email.current.value, Password.current.value)
+      .then((userCredential) => {
+        setErrorMessage("Verification Successful!...😁");
+        setLoginSuccess(true);
+      })
+      .catch((error) => {
+        console.error("Sign in error:", error.code.userCredential); // Log the error code
+        if (error.code === 'auth/wrong-password') {
+          setErrorMessage("Incorrect password. Please try again 😒");
+        } else if (error.code === 'auth/user-not-found') {
+          setErrorMessage("Seems like you are a new user. Please sign up first 😒");
+        } else {
+          setErrorMessage("Verification Unsuccessful. Check your email and password 😒");
+        }
+      });
+  }
+};
 
   const toggleSignIn = () => {
     setSignIn(!signIn);
