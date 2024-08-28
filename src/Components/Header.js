@@ -5,24 +5,36 @@ import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
 import { useSelector } from "react-redux";
-import { ChevronUp } from 'lucide-react';
+import happy from "./images/happy.gif";
 
-
-
-
-
-
+import {
+  ChevronUp,
+  UserRoundPen,
+  ArrowLeftRight,
+  CircleUserRound,
+  CircleHelp,
+} from "lucide-react";
 
 const Header = () => {
-  const [open, setOpen] = useState(false)
+  const user = useSelector((store) => store.user);
+
   const navigate = useNavigate();
-  const user = useSelector((store)=>(store.user));
+
+  const [open, setOpen] = useState(false);
+
+  const handleMouseEnter = () => {
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setOpen(false);
+  };
 
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
         navigate("/");
-        toast.success("SignOut Successfull!", {
+        toast.success("SignOut Successful!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -53,25 +65,71 @@ const Header = () => {
   };
 
   return (
-    <div className=" flex justify-between w-screen  bg-gradient-to-b from-black  cursor-pointer ">
+    <div className="flex justify-between w-screen bg-gradient-to-b from-black cursor-pointer">
       <img
         className="w-44"
         src="https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
         alt="Netflix-Logo"
       />
 
-      <div className=" h-6 mr-2 mt-5 flex justify-center ">
-        <img className="rounded-full h-8  mr-16" src={user.photoURL} alt="" />
-      
-     <div className="py-1 fixed text-white  hover:rotate-180  transition ease-in-out delay-150 hover:text-red-600  ">  <ChevronUp /></div>
+      <div className="h-6 mr-2 mt-5 flex justify-center relative">
+        <img className="rounded-full h-8 mr-16" src={user?.photoURL} alt="" />
 
-        {/* functionality of sign in */}
-        {/* <button
-          className=" font-semibold py-1  text-white hover:text-red-500"
-          onClick={handleSignOut}
+        {/* Wrapper div with event handlers */}
+        <div
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="relative text-white"
         >
-          SignOut
-        </button> */}
+          <ChevronUp className="hover:rotate-180 group-hover:rotate-180 fixed right-10 transition ease-in-out" />
+          {open && (
+            <div className="absolute group mt-10 right-0 rounded-md h-64 bg-black text-white w-60">
+              <ul>
+                <div className="flex bg-white h-10 pt-2 pl-2 rounded-sm w-full">
+                  <h1 className="pr-1 text-red-600 font-semibold text-xl">Hi</h1>
+                  <img className="h-8 rounded-full pb-2" src={happy} alt="" />
+                  <h1 className="text-red-600 ml-3 font-bold">
+                    {user?.displayName}
+                  </h1>
+                </div>
+
+                <div className="flex py-2">
+                  <UserRoundPen />
+                  <li className="text-white ml-2 hover:text-red-600">
+                    Manage profile
+                  </li>
+                </div>
+                <div className="flex py-2">
+                  <ArrowLeftRight />
+                  <li className="text-white ml-2 hover:text-red-600">
+                    Transfer Profile
+                  </li>
+                </div>
+                <div className="flex py-2">
+                  <CircleUserRound />
+                  <li className="text-white ml-2 hover:text-red-600">
+                    Account
+                  </li>
+                </div>
+                <div className="flex py-2">
+                  <CircleHelp />
+                  <li className="text-white ml-2 hover:text-red-600">
+                    Help Center
+                  </li>
+                </div>
+                <hr />
+                <div>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-white ml-12 py-4 hover:text-red-700"
+                  >
+                    Sign Out of Netflix?
+                  </button>
+                </div>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

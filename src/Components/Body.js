@@ -37,7 +37,7 @@ const Body = () => {
         
       }
     });
-  },[dispatch]);
+  },[]);
   return (
     <div>
       <RouterProvider router={appRouter} />

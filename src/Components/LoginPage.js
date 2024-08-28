@@ -77,7 +77,8 @@ const LoginPage = () => {
         
         })
         .catch((error) => {
-          console.error("Sign in error:", error.code.userCredential); // Log the error code
+         // Log the error code
+         setErrorMessage("Something UnExpected happen ! 🙄🙄 ")
           if (error.code === "auth/wrong-password") {
             setErrorMessage("Incorrect password. Please try again 😒");
           } else if (error.code === "auth/user-not-found") {

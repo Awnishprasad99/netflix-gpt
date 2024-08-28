@@ -10,6 +10,7 @@ const Browse =()=>{
   return(
     <div className=" ">
     <Header/>
+    
    
     </div>
   )
