@@ -1,33 +1,24 @@
 import Header from "./Header";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { checkValidData } from "../Utils/Validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../Utils/FireBase";
 import { useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [signIn, setSignIn] = useState(true);
   const [seePassword, setSeePassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [loginSuccess, setLoginSuccess] = useState(false);
  
 
-  const navigate = useNavigate();
-
-  // useEffect to navigate to the Browse page after 1 second when login is successful
-  useEffect(() => {
-    if (loginSuccess) {
-      const timer = setTimeout(() => {
-        navigate("/browse");
-      }, 1000); // 1-second delay before navigating
-
-      return () => clearTimeout(timer); // Cleanup the timer
-    }
-  }, [loginSuccess, navigate]);
-
-
+  const name = useRef(null);
   const Email = useRef(null);
   const Password = useRef(null);
 
@@ -37,41 +28,70 @@ const LoginPage = () => {
 
     if (Message) return;
 
-    
-  if (Message) return;
-
-  if (!signIn) {
-    createUserWithEmailAndPassword(auth, Email.current.value, Password.current.value)
-      .then((userCredential) => {
-        setErrorMessage("Sign up Successful!...😊");
-        setLoginSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Sign up error:", error.code); // Log the error code
-        if (error.code === 'auth/email-already-in-use') {
-          setErrorMessage("User already exists...😂😂");
-        } else {
-          setErrorMessage("Sign up failed. Please try again 😒");
-        }
-      });
-  } else {
-    signInWithEmailAndPassword(auth, Email.current.value, Password.current.value)
-      .then((userCredential) => {
-        setErrorMessage("Verification Successful!...😁");
-        setLoginSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Sign in error:", error.code.userCredential); // Log the error code
-        if (error.code === 'auth/wrong-password') {
-          setErrorMessage("Incorrect password. Please try again 😒");
-        } else if (error.code === 'auth/user-not-found') {
-          setErrorMessage("Seems like you are a new user. Please sign up first 😒");
-        } else {
-          setErrorMessage("Verification Unsuccessful. Check your email and password 😒");
-        }
-      });
-  }
-};
+    if (!signIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        Email.current.value,
+        Password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+// now i will update the user profile.
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://avatars.githubusercontent.com/u/82196621?v=4&size=64"
+          
+          })
+            .then(() => {
+              // Profile updated!
+          
+              // ...
+              setErrorMessage("Sign up Successful!...😊");
+              setTimeout(() => navigate("./browse"), 1000);
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+              setErrorMessage("Error signing up!...😒");
+            });
+        })
+        .catch((error) => {
+          console.error("Sign up error:", error.code); // Log the error code
+          if (error.code === "auth/email-already-in-use") {
+            setErrorMessage("User already exists...😂😂");
+          } else {
+            setErrorMessage("Sign up failed. Please try again 😒");
+          }
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        Email.current.value,
+        Password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("user", user);
+          setErrorMessage("Verification Successful!...😁");
+          setTimeout(() => navigate("./browse"), 1000);
+        
+        })
+        .catch((error) => {
+          console.error("Sign in error:", error.code.userCredential); // Log the error code
+          if (error.code === "auth/wrong-password") {
+            setErrorMessage("Incorrect password. Please try again 😒");
+          } else if (error.code === "auth/user-not-found") {
+            setErrorMessage(
+              "Seems like you are a new user. Please sign up first 😒"
+            );
+          } else {
+            setErrorMessage(
+              "Verification Unsuccessful. Check your email and password 😒"
+            );
+          }
+        });
+    }
+  };
 
   const toggleSignIn = () => {
     setSignIn(!signIn);
@@ -85,7 +105,8 @@ const LoginPage = () => {
     <div
       className="relative h-screen bg-auto bg-center"
       style={{
-        backgroundImage: "url('https://assets.nflxext.com/ffe/siteui/vlv3/031c42b9-0c81-4db5-b980-0160765188e9/27f1b15d-79ed-43ca-8982-7faa9e4aa388/IN-en-20240819-TRIFECTA-perspective_WEB_3c576fa6-cd23-46b6-ac3f-1ad2bb0f66fb_small.jpg')",
+        backgroundImage:
+          "url('https://assets.nflxext.com/ffe/siteui/vlv3/031c42b9-0c81-4db5-b980-0160765188e9/27f1b15d-79ed-43ca-8982-7faa9e4aa388/IN-en-20240819-TRIFECTA-perspective_WEB_3c576fa6-cd23-46b6-ac3f-1ad2bb0f66fb_small.jpg')",
       }}
     >
       <Header />
@@ -101,6 +122,7 @@ const LoginPage = () => {
         </h1>
         {!signIn && (
           <input
+            ref={name}
             type="text"
             placeholder="Enter Your Name"
             className="p-2 m-2 w-full text-white bg-slate-600 bg-opacity-30"
