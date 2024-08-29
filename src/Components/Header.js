@@ -6,6 +6,10 @@ import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
 import { useSelector } from "react-redux";
 import happy from "./images/happy.gif";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { addUser, removeUser } from "../Utils/userSlice";
+import { useDispatch } from "react-redux";
 
 import {
   ChevronUp,
@@ -16,6 +20,8 @@ import {
 } from "lucide-react";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const user = useSelector((store) => store.user);
 
   const navigate = useNavigate();
@@ -26,6 +32,8 @@ const Header = () => {
     setOpen(true);
   };
 
+
+
   const handleMouseLeave = () => {
     setOpen(false);
   };
@@ -33,7 +41,7 @@ const Header = () => {
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        navigate("/");
+   
         toast.success("SignOut Successful!", {
           position: "top-right",
           autoClose: 5000,
@@ -64,6 +72,29 @@ const Header = () => {
       });
   };
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
+          })
+        );
+        navigate("/browse")
+
+        // ...
+      } else {
+        dispatch(removeUser());
+        navigate("/")
+
+      }
+    });
+  }, [dispatch,navigate]);
+
   return (
     <div className="flex justify-between w-screen bg-gradient-to-b from-black cursor-pointer">
       <img
@@ -72,22 +103,28 @@ const Header = () => {
         alt="Netflix-Logo"
       />
 
-      <div className="h-6 mr-2 mt-5 flex justify-center relative">
-        <img className="rounded-full h-8 mr-16" src={user?.photoURL} alt="" />
+      <div className="h-6 mr-2 mt-4 flex justify-center relative">
+        <img className="rounded-full h-10 mr-16" src={user?.photoURL} alt="" />
 
         {/* Wrapper div with event handlers */}
         <div
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+       
+          
+
+          
           className="relative text-white"
         >
-          <ChevronUp className="hover:rotate-180 group-hover:rotate-180 fixed right-10 transition ease-in-out" />
+          <ChevronUp className=" mx-2 -mr-2  hover:rotate-180    group-hover:rotate-180 fixed right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-10 h-10" />
           {open && (
             <div className="absolute group mt-10 right-0 rounded-md h-64 bg-black text-white w-60">
               <ul>
                 <div className="flex bg-white h-10 pt-2 pl-2 rounded-sm w-full">
-                  <h1 className="pr-1 text-red-600 font-semibold text-xl">Hi</h1>
-                  <img className="h-8 rounded-full pb-2" src={happy} alt="" />
+                  <h1 className="pr-1 text-red-600 font-semibold text-xl">
+                    Hi
+                  </h1>
+                  <img className="h-9 rounded-full pb-2" src={happy} alt="" />
                   <h1 className="text-red-600 ml-3 font-bold">
                     {user?.displayName}
                   </h1>

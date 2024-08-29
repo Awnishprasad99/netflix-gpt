@@ -1,4 +1,5 @@
 import Header from "./Header";
+import{ClipLoader } from 'react-spinners'
 import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -8,14 +9,16 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../Utils/FireBase";
-import { useNavigate } from "react-router-dom";
+
 import { updateProfile } from "firebase/auth";
 
+
 const LoginPage = () => {
-  const navigate = useNavigate();
+
   const [signIn, setSignIn] = useState(true);
   const [seePassword, setSeePassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [loder , setLoder] = useState(false)
  
 
   const name = useRef(null);
@@ -29,6 +32,7 @@ const LoginPage = () => {
     if (Message) return;
 
     if (!signIn) {
+      setLoder(true);
       createUserWithEmailAndPassword(
         auth,
         Email.current.value,
@@ -47,13 +51,17 @@ const LoginPage = () => {
           
               // ...
               setErrorMessage("Sign up Successful!...😊");
-              setTimeout(() => navigate("./browse"), 1000);
+            
             })
             .catch((error) => {
               // An error occurred
               // ...
               setErrorMessage("Error signing up!...😒");
-            });
+            })
+            .finally(()=>{
+              setLoder(false);
+            })
+            ;
         })
         .catch((error) => {
           console.error("Sign up error:", error.code); // Log the error code
@@ -64,6 +72,7 @@ const LoginPage = () => {
           }
         });
     } else {
+      setLoder(true);
       signInWithEmailAndPassword(
         auth,
         Email.current.value,
@@ -73,7 +82,7 @@ const LoginPage = () => {
           const user = userCredential.user;
           console.log("user", user);
           setErrorMessage("Verification Successful!...😁");
-          setTimeout(() => navigate("./browse"), 1000);
+       
         
         })
         .catch((error) => {
@@ -90,7 +99,9 @@ const LoginPage = () => {
               "Verification Unsuccessful. Check your email and password 😒"
             );
           }
-        });
+        })
+        .finally(()=>{setLoder(false)})
+
     }
   };
 
@@ -157,14 +168,20 @@ const LoginPage = () => {
           onClick={handleButtonClick}
           className="font-semibold text-md p-2 m-5 mx-2 block rounded-sm bg-red-600 hover:bg-red-700 text-white w-full text-center"
         >
-          {signIn ? "SignIn" : "SignUp"}
+         <div className="flex mx-28 ">{signIn ? "SignIn" : "SignUp"} <div className="mx-24 mt-1"> {loder &&  <ClipLoader color="white" size="20" speedMultiplier="2"/>} </div> </div> 
         </button>
         <p className="text-red-500">{errorMessage}</p>
-        <p className="text-slate-300 mx-32">OR</p>
+        <p className="text-slate-300 mx-36">OR</p>
         <button className="font-semibold text-md p-2 m-5 mx-2 block rounded-sm bg-slate-600 bg-opacity-30 hover:bg-opacity-45 text-white w-full text-center">
           Use a sign-In code
         </button>
         <p className="text-white mx-[77px]">Forget Password</p>
+        {/* <div className="bg-white"> <Loader/></div> */}
+
+      
+       
+        
+        
         <div className="flex flex-col gap-3 py-6 mx-4 items-start">
           <div>
             <input
@@ -185,6 +202,7 @@ const LoginPage = () => {
               onClick={toggleSignIn}
             >
               {signIn ? "SignUp" : "SignIn"}
+            
             </p>
           </div>
         </div>
@@ -196,6 +214,7 @@ const LoginPage = () => {
               Learn more
             </p>
           </p>
+     
         </div>
       </form>
     </div>
