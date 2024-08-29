@@ -32,8 +32,6 @@ const Header = () => {
     setOpen(true);
   };
 
-
-
   const handleMouseLeave = () => {
     setOpen(false);
   };
@@ -41,7 +39,6 @@ const Header = () => {
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-   
         toast.success("SignOut Successful!", {
           position: "top-right",
           autoClose: 5000,
@@ -58,6 +55,7 @@ const Header = () => {
       })
       .catch((error) => {
         // An error happened.
+        console.log(error);
         toast.error("Something went wrong!", {
           position: "top-right",
           autoClose: 5000,
@@ -73,7 +71,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(
@@ -84,16 +82,17 @@ const Header = () => {
             photoURL: photoURL,
           })
         );
-        navigate("/browse")
+        navigate("/browse");
 
         // ...
       } else {
         dispatch(removeUser());
-        navigate("/")
-
+        navigate("/");
       }
     });
-  }, [dispatch,navigate]);
+
+    return () => unsubscribe;
+  }, [dispatch, navigate]);
 
   return (
     <div className="flex justify-between w-screen bg-gradient-to-b from-black cursor-pointer">
@@ -110,10 +109,6 @@ const Header = () => {
         <div
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-       
-          
-
-          
           className="relative text-white"
         >
           <ChevronUp className=" mx-2 -mr-2  hover:rotate-180    group-hover:rotate-180 fixed right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-10 h-10" />
@@ -125,7 +120,7 @@ const Header = () => {
                     Hi
                   </h1>
                   <img className="h-9 rounded-full pb-2" src={happy} alt="" />
-                  <h1 className="text-red-600 ml-3 font-bold">
+                  <h1 className="text-red-600 ml-3 font-bold text-xl">
                     {user?.displayName}
                   </h1>
                 </div>
@@ -156,9 +151,9 @@ const Header = () => {
                 </div>
                 <hr />
                 <div>
-                  <button
+                  <button 
                     onClick={handleSignOut}
-                    className="text-white ml-12 py-4 hover:text-red-700"
+                    className="text-white ml-12 py-4 font-bold hover:text-red-700"
                   >
                     Sign Out of Netflix?
                   </button>
