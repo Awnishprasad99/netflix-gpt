@@ -55,7 +55,7 @@ const Header = () => {
       })
       .catch((error) => {
         // An error happened.
-        console.log(error);
+        ;
         toast.error("Something went wrong!", {
           position: "top-right",
           autoClose: 5000,
@@ -115,7 +115,7 @@ const Header = () => {
           {open && (
             <div className="absolute group mt-10 right-0 rounded-md h-64 bg-black text-white w-60">
               <ul>
-                <div className="flex bg-white h-10 pt-2 pl-2 rounded-sm w-full">
+                <div className="flex bg-white h-10 pt-2 pl-2 rounded-md w-full">
                   <h1 className="pr-1 text-red-600 font-semibold text-xl">
                     Hi
                   </h1>
@@ -125,25 +125,25 @@ const Header = () => {
                   </h1>
                 </div>
 
-                <div className="flex py-2">
+                <div className="flex py-2 mx-2">
                   <UserRoundPen />
                   <li className="text-white ml-2 hover:text-red-600">
                     Manage profile
                   </li>
                 </div>
-                <div className="flex py-2">
+                <div className="flex py-2 mx-2">
                   <ArrowLeftRight />
                   <li className="text-white ml-2 hover:text-red-600">
                     Transfer Profile
                   </li>
                 </div>
-                <div className="flex py-2">
+                <div className="flex py-2 mx-2">
                   <CircleUserRound />
                   <li className="text-white ml-2 hover:text-red-600">
                     Account
                   </li>
                 </div>
-                <div className="flex py-2">
+                <div className="flex py-2 mx-2">
                   <CircleHelp />
                   <li className="text-white ml-2 hover:text-red-600">
                     Help Center
