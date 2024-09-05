@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { API_OPTIONS } from "../Utils/Constant";
 import { addNowPlayingTrailer } from "../Utils/trailerSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
 
 const useMovieTrailer = (id)=>{
 
@@ -19,13 +21,28 @@ const useMovieTrailer = (id)=>{
         API_OPTIONS
       );
   
-      const json = await data.json();
+      try {
+        const json = await data.json();
       const filterData = json.results.filter((video) => video.type === "Trailer");
-      const Trailer = filterData.length ? filterData[0] : json.results[0];
+      // console.log("trailerdata",filterData)
+      const Trailer = filterData.length ? filterData[1] : json.results[1];
       // console.log("Trailer key" , Trailer)
+    dispatch(addNowPlayingTrailer(Trailer))
     
-      dispatch(addNowPlayingTrailer(Trailer))
-    
+      } catch (error) {
+      toast.error("Something went wrong!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+      
      
     };
 

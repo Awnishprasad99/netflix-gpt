@@ -95,15 +95,16 @@ const Header = () => {
   }, [dispatch, navigate]);
 
   return (
-    <div className="flex justify-between w-screen bg-gradient-to-b from-black cursor-pointer">
+    <div className="relative    ">
+    <div  className="flex justify-between z-20 absolute bg-grey-400 w-full  bg-gradient-to-b   from-black cursor-pointer">
       <img
         className="w-44"
         src="https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
         alt="Netflix-Logo"
       />
 
-      <div className="h-6 mr-2 mt-4 flex justify-center relative">
-        <img className="rounded-full h-10 mr-16" src={user?.photoURL} alt="" />
+      <div className="h-6 mr-4 mt-4  flex justify-center relative ">
+        <img className="rounded-full h-10   " src={user?.photoURL} alt="" />
 
         {/* Wrapper div with event handlers */}
         <div
@@ -111,9 +112,9 @@ const Header = () => {
           onMouseLeave={handleMouseLeave}
           className="relative text-white"
         >
-          <ChevronUp className=" mx-2 -mr-2  hover:rotate-180    group-hover:rotate-180 fixed right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-10 h-10" />
+          <ChevronUp className="  -ml-3  hover:rotate-180  mt-3  group-hover:rotate-180  right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-20  h-7  " />
           {open && (
-            <div className="absolute group mt-10 right-0 rounded-md h-64 bg-black text-white w-60">
+            <div className="absolute group  right-0 rounded-md h-64 bg-black text-white w-60">
               <ul>
                 <div className="flex bg-white h-10 pt-2 pl-2 rounded-md w-full">
                   <h1 className="pr-1 text-red-600 font-semibold text-xl">
@@ -163,6 +164,7 @@ const Header = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
