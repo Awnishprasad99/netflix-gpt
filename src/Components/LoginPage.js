@@ -20,6 +20,17 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loder , setLoder] = useState(false)
  
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    if (value.length > 10) {
+      setErrorMessage("Only 10 characters are allowed!")
+   
+      return;
+    }
+    setInputValue(value);
+  };
 
   const name = useRef(null);
   const Email = useRef(null);
@@ -134,9 +145,11 @@ const LoginPage = () => {
         </h1>
         {!signIn && (
           <input
+           value={inputValue} 
+           onChange={handleInputChange} 
             ref={name}
             type="text"
-            placeholder="Enter Your Name"
+            placeholder="Enter Your first Name (max-10)"
             className="p-2 m-2 w-full text-white bg-slate-600 bg-opacity-30"
           />
         )}
