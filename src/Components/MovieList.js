@@ -4,7 +4,7 @@ const MovieList = ({ tittle, movies }) => {
   console.log(movies);
   return (
     <>
-    <div className="bg-gradient-to-b from-black pt-6 pl-6 bg-black  ">
+    <div className=" pt-6 pl-6   ">
        <h1 className="text-white py-2 font-semibold text-3xl">{tittle}</h1>
       <div className=" mt-6  cursor-pointer  flex overflow-x-scroll no-scrollbar  ">
      

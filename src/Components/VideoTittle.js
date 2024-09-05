@@ -5,7 +5,7 @@ import { Info } from 'lucide-react';
 const VideoTittle =({tittle,overview})=>{
     return(
 
-       <div className=" absolute   text-white   pt-[20%] pl-[10%] aspect-video bg-gradient-to-r from-black">
+       <div className=" absolute  z-5  text-white   pt-[20%] pl-[10%] aspect-video bg-gradient-to-r from-black">
        <div className=" ">
        <div className="flex  "> <img className="w-5 h-6 " src="https://brand.netflix.com/favicon.ico" alt="" /> <h1 className="font-bold">FILM</h1></div>
 <h1 className="text-6xl font-bold ">{tittle}</h1>
