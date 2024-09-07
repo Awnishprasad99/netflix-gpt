@@ -10,6 +10,9 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { addUser, removeUser } from "../Utils/userSlice";
 import { useDispatch } from "react-redux";
+import { toggleGptSearchView } from "../Utils/gptSlice";
+
+
 
 import {
   ChevronUp,
@@ -22,9 +25,17 @@ import {
 const Header = () => {
   const dispatch = useDispatch();
 
+
+
   const user = useSelector((store) => store.user);
 
+  const showGptSearch = useSelector((store)=>(store.gpt.showGptSearch))
   const navigate = useNavigate();
+
+  const handleGPtSearch=()=>{
+    dispatch(toggleGptSearchView())
+    
+  }
 
   const [open, setOpen] = useState(false);
 
@@ -104,8 +115,14 @@ const Header = () => {
         alt="Netflix-Logo"
       />
 
+     
+<button onClick={()=>handleGPtSearch()} className="text-white h-10 w-24 rounded-lg bg-purple-800 ml-auto mr-3 mt-4 hover:bg-purple-900 hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out">
+            { showGptSearch ?"CloseGpt":"OpenGpt"}
+</button>
+
+
       <div className="h-6 mr-4 mt-4  flex justify-center relative ">
-        <img className="rounded-full h-10   " src={user?.photoURL} alt="" />
+        <img className="rounded-lg h-9  " src={user?.photoURL} alt="" />
 
         {/* Wrapper div with event handlers */}
         <div
@@ -113,7 +130,7 @@ const Header = () => {
           onMouseLeave={handleMouseLeave}
           className="relative text-white"
         >
-          <ChevronUp className="  -ml-3  hover:rotate-180  mt-3  group-hover:rotate-180  right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-20  h-7  " />
+          <ChevronUp className="  -ml-5  hover:rotate-180  mt-1  group-hover:rotate-180  right-10 transition ease-in-out hover:text-red-700  hover:bg-transparent w-20  h-7  " />
           {open && (
             <div className="absolute group  right-0 rounded-md h-64 bg-black text-white w-60">
               <ul>

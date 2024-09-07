@@ -54,7 +54,7 @@ const LoginPage = () => {
 // now i will update the user profile.
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/82196621?v=4&size=64"
+            photoURL: "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.jpg"
           
           })
             .then(() => {
