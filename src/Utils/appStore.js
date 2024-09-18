@@ -3,6 +3,8 @@ import  userReducer  from "./userSlice";
 import moviesReducer from "./moviesSlice"
 import trailerReducer from './trailerSlice'
 import gptReducer from "./gptSlice"
+import languageReducer from './languageSlice'
+
 
 
 
@@ -12,7 +14,8 @@ const appStore = configureStore(
             user:userReducer,
             movies:moviesReducer,
             trailer:trailerReducer,
-            gpt:gptReducer
+            gpt:gptReducer,
+            language:languageReducer
         }
 
     }
